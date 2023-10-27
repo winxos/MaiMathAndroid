@@ -16,6 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,6 +44,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 fun handle(n:Int)
 {
     println(n)
@@ -50,6 +55,7 @@ fun handle(n:Int)
 fun MaiMath() {
     Column(modifier = Modifier.fillMaxWidth(),
     ) {
+        var ans by remember{mutableStateOf("0")}
         Text(
             "Mai's Math",
             fontSize = 40.sp,
@@ -61,12 +67,12 @@ fun MaiMath() {
             color = Color.Blue,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
         Text(
-            "0",
+            ans,
             fontSize = 120.sp,
             color = Color.DarkGray,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
-        var ns = arrayOf("0","1","2","+","3","4","5","-",
-            "6","7","8","×","9",".","=","÷")
+        var ns = arrayOf("7","8","9","+","4","5","6","-",
+            "1","2","3","×","0","←","=","÷")
         for(i in 0 until ns.size/4)
         {
             Row (modifier = Modifier.fillMaxWidth().padding(all=10.dp),
@@ -75,9 +81,27 @@ fun MaiMath() {
 
                 for(j in 0..3)
                 {
-                    Button(onClick = {handle(i*4+j)},
+                    var k = i*4+j
+                    Button(onClick = {
+                        handle(k)
+                        if(ns[k] == "←")
+                        {
+                            if(ans.length>1)
+                            {
+                                ans = ans.substring(0,ans.length-1)
+                            }
+                            else
+                            {
+                                ans = "0"
+                            }
+                        }
+                        else
+                        {
+                            ans+=ns[k]
+                        }
+                        },
                         modifier = Modifier.size(width = 80.dp, height = 60.dp)){
-                        Text(ns[i*4+j], fontSize = 30.sp)
+                        Text(ns[k], fontSize = 30.sp)
                     }
                 }
             }
